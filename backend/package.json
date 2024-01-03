@@ -1,0 +1,11 @@
+{
+  "name": "stellaralgo_backend_api",
+  "version": "1.0.0",
+  "description": "test assessment for stellar algo",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robbie Prokop",
+  "license": "ISC"
+}
