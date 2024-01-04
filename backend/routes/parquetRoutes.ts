@@ -13,6 +13,6 @@ router.route("/total/price").get(getTotalPricePerEvent)
 router.route("/total/tickets").get(getTotalTicketsPerType)
 router.route("/highestTotalName").get(getHighestTotalName)
 router.route("/highestTicketsName").get(getHighestTicketsName)
-router.route("/totalPurchase").get(getTotalPricePerEvent)
+router.route("/totalPurchase").get(getTotalPurchasePerGame)
 
 export default router
