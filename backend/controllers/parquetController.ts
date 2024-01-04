@@ -2,23 +2,56 @@
 import db from '../config/duckdb.js';
 const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
 
-// DESC: QUESTION #1 -  Get total price of tickets bought on a specific day for each of the 2 events
-// Route: GET /api/parquet/total/price/:date
-const getTotalPricePerEvent = (req, res) => {
-  const date = req.params.date
+const con = db.connect();
+
+const getAll = (req, res) => {
   try {
-    db.all(`SELECT SUM(Price) AS TotalPrice FROM "${filePath}" WHERE "Purchase Date" = '${date}'`, function (err, response) {
+    con.all(`SELECT * FROM '${filePath}' ORDER BY "Event Name"`, function (err, response) {
       if (err) {
         console.log("error from readParquetFile", err)
         throw err;
       }
       console.log('res', response)
-      res.status(200).json(response[0])
+      res.status(200).json({ parquetContents: response })
     })
   } catch (error) {
     console.log('error :>> ', error);
     res.status(500).json({ message: "Failed to read parquet file" })
   }
+};
+
+// DESC: QUESTION #1 -  Get total price of tickets bought on a specific day for each of the 2 events
+// Route: GET /api/parquet/total/price/:date
+const getTotalPricePerEvent = async (req, res) => {
+  const date = req.params.date
+  try {
+
+    const sum1 = await new Promise((resolve, reject) => {
+      con.all(`SELECT SUM(Price) AS totalPrice1 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = 'Wolves vs Knights';`, function (err, res) {
+        if (err) {
+          console.log("error from readParquetFile", err)
+          reject(err);
+        }
+        resolve(res[0].totalPrice1)
+      })
+    })
+    const sum2 = await new Promise((resolve, reject) => {
+      con.all(`SELECT SUM(Price) AS totalPrice2 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = 'Wolves vs SunRays';`, function (err, res) {
+        if (err) {
+          console.log("error from readParquetFile", err)
+          reject(err);
+        }
+        resolve(res[0].totalPrice2)
+      })
+    })
+
+
+    res.status(200).json({ event1Sum: sum1, event2Sum: sum2, })
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: "Failed to read parquet file", error })
+  }
+
 };
 
 // DESC: QUESTION #2 - The Number of tickets purchased for each ticket type for each of the games respectively
@@ -56,5 +89,6 @@ export {
   getTotalTicketsPerType,
   getHighestTotalName,
   getHighestTicketsName,
-  getTotalPurchasePerGame
+  getTotalPurchasePerGame,
+  getAll
 }
