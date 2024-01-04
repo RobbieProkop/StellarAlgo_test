@@ -25,7 +25,6 @@ const getAll = (req, res) => {
 const getTotalPricePerEvent = async (req, res) => {
   const date = req.params.date
   try {
-
     const sum1 = await new Promise((resolve, reject) => {
       con.all(`SELECT SUM(Price) AS totalPrice1 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = 'Wolves vs Knights';`, function (err, res) {
         if (err) {
@@ -35,6 +34,7 @@ const getTotalPricePerEvent = async (req, res) => {
         resolve(res[0].totalPrice1)
       })
     })
+
     const sum2 = await new Promise((resolve, reject) => {
       con.all(`SELECT SUM(Price) AS totalPrice2 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = 'Wolves vs SunRays';`, function (err, res) {
         if (err) {
@@ -45,8 +45,8 @@ const getTotalPricePerEvent = async (req, res) => {
       })
     })
 
-
     res.status(200).json({ event1Sum: sum1, event2Sum: sum2, })
+
   } catch (error) {
     console.log('error :>> ', error);
     res.status(500).json({ message: "Failed to read parquet file", error })
