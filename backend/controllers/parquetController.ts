@@ -4,8 +4,9 @@ import readParquetFile from "./readParquetController.js";
 // Route: GET /api/parquet/total/price
 const getTotalPricePerEvent = async (req, res) => {
   try {
-    const contents = await readParquetFile('/controllers/stellaralgo_dataset.parquet');
+    const contents = await readParquetFile('/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet');
     console.log("contents", contents)
+    res.json({ contents: contents })
 
   } catch (error) {
     console.log('error :>> ', error);

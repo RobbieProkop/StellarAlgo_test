@@ -1,7 +1,15 @@
 import Parquet from 'parquetjs-lite';
-import fs from 'fs'
+import db from '../config/duckdb.js';
 
 const readParquetFile = async (filePath: string) => {
+  db.all(`SELECT * FROM ${filePath} LIMIT 5`, function (err, res) {
+    if (err) {
+      console.log("error from readParquetFile", err)
+      throw err;
+    }
+    console.log('res', res)
+    return res
+  })
   // // create new ParquetReader that reads from 'fruits.parquet`
   // let reader = await Parquet.ParquetReader.openFile(filePath);
 
@@ -15,16 +23,9 @@ const readParquetFile = async (filePath: string) => {
   //   records.push(record);
   // }
   // await reader.close();
+  // console.log("records", records)
   // return records
 
-  fs.stat('/controllers/stellaralgo_dataset.parquet', (err, stats) => {
-    if (err) {
-      console.log("error reading from fs", err)
-      throw err;
-    }
-
-    console.log('stats :>> ', stats);
-  })
 
 }
 
