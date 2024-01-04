@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.route("/total/price").get(getTotalPricePerEvent)
+router.route("/total/price/:date").get(getTotalPricePerEvent)
 router.route("/total/tickets").get(getTotalTicketsPerType)
 router.route("/highestTotalName").get(getHighestTotalName)
 router.route("/highestTicketsName").get(getHighestTicketsName)
