@@ -1,13 +1,19 @@
-import readParquetFile from "./readParquetController.js";
+// import readParquetFile from "./readParquetController.js";
+import db from '../config/duckdb.js';
+const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
 
 // DESC: QUESTION #1 -  Get total price of tickets bought on a specific day for each of the 2 events
 // Route: GET /api/parquet/total/price
 const getTotalPricePerEvent = async (req, res) => {
   try {
-    const contents = await readParquetFile('/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet');
-    console.log("contents", contents)
-    res.json({ contents: contents })
-
+    db.all(`SELECT * FROM '${filePath}' LIMIT 5`, function (err, response) {
+      if (err) {
+        console.log("error from readParquetFile", err)
+        throw err;
+      }
+      console.log('res', response)
+      res.json({ parquetContents: response })
+    })
   } catch (error) {
     console.log('error :>> ', error);
     res.status(500).json({ message: "Failed to read parquet file" })
