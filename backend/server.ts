@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import errorHandler from "./middleware/errorMiddleware.js";
+import parquetRoutes from "./routes/parquetRoutes.js";
 
 const PORT = process.env.PORT || 8080;
 dotenv.config();
@@ -20,6 +21,8 @@ app.get("/api/heartbeat", async(req,res) => {
     res.status(500).json({error: "Something went wrong with the heartbeat"})
   }
 })
+
+app.use("/api/parquet", parquetRoutes)
 
 app.use(errorHandler);
 

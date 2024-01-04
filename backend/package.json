@@ -4,7 +4,12 @@
   "description": "test assessment for stellar algo",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "nodemon",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobbieProkop/StellarAlgo_test.git"
   },
   "author": "Robbie Prokop",
   "license": "ISC",
@@ -16,6 +21,7 @@
     "@types/express": "^4.17.17",
     "@types/node": "^20.6.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "nodemon": "^3.0.1"
   }
 }
