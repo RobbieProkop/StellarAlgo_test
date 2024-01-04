@@ -10,6 +10,9 @@
     "sourceMap": true,
     "outDir": "build",
     "rootDir": "./"
+    // "types": [
+    //   "node"
+    // ]
   },
   "include": [
     "**/*"
