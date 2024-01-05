@@ -21,8 +21,12 @@ export interface Q2 {
   event: string;
   totalNumTickets: number;
 }
+
+export interface Q5Data {
+  sum: number
+}
 export interface Q5 {
   type: string;
   event: string;
-  totalPurchasePrice: number;
+  totalPurchasePrice: Q5Data;
 }

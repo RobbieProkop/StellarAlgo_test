@@ -1,6 +1,6 @@
 // import readParquetFile from "./readParquetController.js";
 import db from '../config/duckdb.js';
-import { ParquetObj, Q1, Q2, Q5 } from '../models/parquetModels.js';
+import { ParquetObj, Q1, Q2, Q5, Q5Data } from '../models/parquetModels.js';
 
 const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
 const event1 = "Wolves vs Knights";
@@ -121,19 +121,20 @@ const getTotalPurchasePerGame = async (req, res) => {
       const eventObj: Q5[] = []
       result[eventName] = await (async () => {
         for (const ticketType of ticketTypes) {
-          const response: ParquetObj[] = await new Promise((resolve, reject) => {
-            con.all(`SELECT SUM(Price)  FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`, function (err, data: ParquetObj[]) {
+          const response = await new Promise<Q5Data>((resolve, reject) => {
+            con.all(`SELECT SUM(Price) AS sum  FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`, function (err, data) {
               if (err) {
                 console.log("error from Q2", err)
                 reject(err)
               }
-              resolve(data)
+              resolve(data[0].sum)
+
             })
           })
           eventObj.push({
             type: ticketType,
             event: eventName,
-            totalPurchasePrice: response.length
+            totalPurchasePrice: response
           });
         }
         return eventObj;
