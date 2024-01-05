@@ -1,6 +1,6 @@
 // import readParquetFile from "./readParquetController.js";
 import db from '../config/duckdb.js';
-import { ParquetObj, Q1, Q2 } from '../models/parquetModels.js';
+import { ParquetObj, Q1, Q2, Q5 } from '../models/parquetModels.js';
 
 const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
 const event1 = "Wolves vs Knights";
@@ -84,7 +84,7 @@ const getTotalTicketsPerType = async (req, res) => {
           eventObj.push({
             type: ticketType,
             event: eventName,
-            total: response.length
+            totalNumTickets: response.length
           });
         }
         return eventObj;
@@ -103,16 +103,53 @@ const getTotalTicketsPerType = async (req, res) => {
 };
 
 // DESC: QUESTION #3 - First Name that purchased the highest total $ of tickets
-// Route: GET /api/parquet/highestTotalName
-const getHighestTotalName = () => { };
+// Route: GET /api/parquet/highest/totalName
+const getHighestTotalName = async (req, res) => { };
 
 // DESC: QUESTION #4 - First Name that purchased the highest number of total tickets
-// Route: GET /api/parquet/highestTicketsName
-const getHighestTicketsName = () => { };
+// Route: GET /api/parquet/highest/ticketsName
+const getHighestTicketsName = async (req, res) => { };
 
 // DESC: QUESTION #5 - Total purchase price for each ticket type for each game.
-// Route: GET /api/parquet/totalPurchase
-const getTotalPurchasePerGame = () => { };
+// Route: GET /api/parquet/total/purchase
+const getTotalPurchasePerGame = async (req, res) => {
+  try {
+    let result = {};
+
+    const ticketTypes = ['Package', 'Individual', 'Full Season'];
+    for (const eventName of eventNames) {
+      const eventObj: Q5[] = []
+      result[eventName] = await (async () => {
+        for (const ticketType of ticketTypes) {
+          const response: ParquetObj[] = await new Promise((resolve, reject) => {
+            con.all(`SELECT SUM(Price)  FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`, function (err, data: ParquetObj[]) {
+              if (err) {
+                console.log("error from Q2", err)
+                reject(err)
+              }
+              resolve(data)
+            })
+          })
+          eventObj.push({
+            type: ticketType,
+            event: eventName,
+            totalPurchasePrice: response.length
+          });
+        }
+        return eventObj;
+      })();
+    }
+
+    console.log('result :>> ', result);
+    res.status(200).json(result)
+
+
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: "Failed to read parquet file", error })
+  }
+};
 
 export {
   getTotalPricePerEvent,

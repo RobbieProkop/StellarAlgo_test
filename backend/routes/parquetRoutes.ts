@@ -12,9 +12,9 @@ const router = express.Router();
 
 router.route("/total/price/:date").get(getTotalPricePerEvent)
 router.route("/total/tickets").get(getTotalTicketsPerType)
-router.route("/highestTotalName").get(getHighestTotalName)
-router.route("/highestTicketsName").get(getHighestTicketsName)
-router.route("/totalPurchase").get(getTotalPurchasePerGame)
+router.route("/total/purchase").get(getTotalPurchasePerGame)
+router.route("/highest/totalName").get(getHighestTotalName)
+router.route("/highest/ticketsName").get(getHighestTicketsName)
 router.route("/getAll").get(getAll)
 
 export default router

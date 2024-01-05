@@ -18,6 +18,11 @@ export interface Q1 {
 
 export interface Q2 {
   type: string;
-  total: number;
   event: string;
+  totalNumTickets: number;
+}
+export interface Q5 {
+  type: string;
+  event: string;
+  totalPurchasePrice: number;
 }
