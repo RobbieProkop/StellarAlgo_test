@@ -32,6 +32,11 @@ export interface Q3 {
   FirstName: string,
 }
 
+export interface Q4Data {
+  "First Name": string,
+  "Last Name": string,
+}
+
 export interface Q5Data {
   sum: number
 }

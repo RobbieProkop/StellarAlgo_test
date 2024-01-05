@@ -1,6 +1,6 @@
 // import readParquetFile from "./readParquetController.js";
 import db from '../config/duckdb.js';
-import { ParquetObj, Q1, Q2, Q3Names, Q5, Q5Data } from '../models/parquetModels.js';
+import { ParquetObj, Q1, Q2, Q3Names, Q4Data, Q5, Q5Data } from '../models/parquetModels.js';
 
 const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
 const event1 = "Wolves vs Knights";
@@ -151,8 +151,8 @@ const getHighestTotalName = async (req, res) => {
 // Route: GET /api/parquet/highest/ticketsName
 const getHighestTicketsName = async (req, res) => {
   try {
-    const data: Q3Names[] = await new Promise((resolve, reject) => {
-      con.all(`SELECT "First Name", "Last Name" FROM "${filePath}"`, function (err, data: Q3Names[]) {
+    const data: Q4Data[] = await new Promise((resolve, reject) => {
+      con.all(`SELECT "First Name", "Last Name" FROM "${filePath}"`, function (err, data: Q4Data[]) {
         if (err) {
           console.log("error from highest total name", err);
           reject(err);
