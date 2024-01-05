@@ -47,5 +47,5 @@ export interface Q5Data {
 export interface Q5 {
   type: string;
   event: string;
-  totalPurchasePrice: Q5Data;
+  totalPurchasePrice: number;
 }

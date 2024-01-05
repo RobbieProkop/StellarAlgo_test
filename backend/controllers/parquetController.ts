@@ -84,10 +84,7 @@ const getTotalTicketsPerType = async (req, res) => {
       })();
     }
 
-    console.log('result :>> ', result);
     res.status(200).json(result)
-
-
 
   } catch (error) {
     console.log('error :>> ', error);
@@ -122,7 +119,6 @@ const getHighestTotalName = async (req, res) => {
       }
     })
 
-    console.log('highestName, highestAmount :>> ', highestName, highestAmount);
     res.status(200).json(highestName)
 
   } catch (error) {
@@ -158,7 +154,6 @@ const getHighestTicketsName = async (req, res) => {
       }
     })
 
-    console.log('highestName, highestAmount :>> ', highestName, highestAmount);
     res.status(200).json(highestName)
 
   } catch (error) {
@@ -178,30 +173,19 @@ const getTotalPurchasePerGame = async (req, res) => {
       const eventObj: Q5[] = []
       result[eventName] = await (async () => {
         for (const ticketType of ticketTypes) {
-          const response = await new Promise<Q5Data>((resolve, reject) => {
-            con.all(`SELECT SUM(Price) AS sum  FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`, function (err, data) {
-              if (err) {
-                console.log("error from Q2", err)
-                reject(err)
-              }
-              resolve(data[0].sum)
+          const query = `SELECT SUM(Price) AS sum  FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`
+          const response = await queryDatabase<Q5Data>(query)
 
-            })
-          })
           eventObj.push({
             type: ticketType,
             event: eventName,
-            totalPurchasePrice: response
+            totalPurchasePrice: response[0].sum
           });
         }
         return eventObj;
       })();
     }
-
-    console.log('result :>> ', result);
     res.status(200).json(result)
-
-
 
   } catch (error) {
     console.log('error :>> ', error);
