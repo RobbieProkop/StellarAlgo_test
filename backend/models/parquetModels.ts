@@ -22,6 +22,16 @@ export interface Q2 {
   totalNumTickets: number;
 }
 
+export interface Q3Names {
+  "First Name": string,
+  "Last Name": string,
+  "Price": number
+}
+
+export interface Q3 {
+  FirstName: string,
+}
+
 export interface Q5Data {
   sum: number
 }

@@ -1,6 +1,6 @@
 // import readParquetFile from "./readParquetController.js";
 import db from '../config/duckdb.js';
-import { ParquetObj, Q1, Q2, Q5, Q5Data } from '../models/parquetModels.js';
+import { ParquetObj, Q1, Q2, Q3Names, Q5, Q5Data } from '../models/parquetModels.js';
 
 const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
 const event1 = "Wolves vs Knights";
@@ -12,7 +12,7 @@ const con = db.connect();
 
 const getAll = (req, res) => {
   try {
-    con.all(`SELECT * FROM '${filePath}' WHERE "Ticket Type" = 'Individual' ORDER BY "Event Name"`, function (err, response) {
+    con.all(`SELECT * FROM '${filePath}' WHERE "Last Name" = 'Mccarthy'`, function (err, response) {
       if (err) {
         console.log("error from readParquetFile", err)
         throw err;
@@ -104,11 +104,54 @@ const getTotalTicketsPerType = async (req, res) => {
 
 // DESC: QUESTION #3 - First Name that purchased the highest total $ of tickets
 // Route: GET /api/parquet/highest/totalName
-const getHighestTotalName = async (req, res) => { };
+const getHighestTotalName = async (req, res) => {
+  try {
+    const data: Q3Names[] = await new Promise((resolve, reject) => {
+      con.all(`SELECT "First Name", "Last Name", "Price" FROM "${filePath}"`, function (err, data: Q3Names[]) {
+        if (err) {
+          console.log("error from highest total name", err);
+          reject(err);
+        }
+        resolve(data)
+      })
+    })
+
+    const priceMap = new Map<string, number>();
+
+    data.forEach(purchase => {
+      const nameKey = `${purchase["First Name"]} ${purchase["Last Name"]}`;
+      if (priceMap.has(nameKey)) {
+        priceMap.set(nameKey, priceMap.get(nameKey) + purchase["Price"])
+      } else {
+        priceMap.set(nameKey, purchase["Price"]);
+      }
+    })
+
+    let highestName = "";
+    let highestAmount = 0;
+
+    priceMap.forEach((total, name) => {
+      if (total > highestAmount) {
+        highestAmount = total;
+        highestName = name.split(" ")[0];
+      }
+    })
+
+    console.log('highestName, highestAmount :>> ', highestName, highestAmount);
+
+    res.status(200).json(highestName)
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: "Failed to get name of highest $ purchase", error })
+  }
+};
 
 // DESC: QUESTION #4 - First Name that purchased the highest number of total tickets
 // Route: GET /api/parquet/highest/ticketsName
-const getHighestTicketsName = async (req, res) => { };
+const getHighestTicketsName = async (req, res) => {
+
+};
 
 // DESC: QUESTION #5 - Total purchase price for each ticket type for each game.
 // Route: GET /api/parquet/total/purchase
