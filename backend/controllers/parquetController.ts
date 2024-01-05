@@ -123,7 +123,6 @@ const getHighestTotalName = async (req, res) => {
     })
 
     console.log('highestName, highestAmount :>> ', highestName, highestAmount);
-
     res.status(200).json(highestName)
 
   } catch (error) {
@@ -136,16 +135,8 @@ const getHighestTotalName = async (req, res) => {
 // Route: GET /api/parquet/highest/ticketsName
 const getHighestTicketsName = async (req, res) => {
   try {
-    const data: Q4Data[] = await new Promise((resolve, reject) => {
-      con.all(`SELECT "First Name", "Last Name" FROM "${filePath}"`, function (err, data: Q4Data[]) {
-        if (err) {
-          console.log("error from highest total name", err);
-          reject(err);
-        }
-        resolve(data)
-      })
-    })
-
+    const query = `SELECT "First Name", "Last Name" FROM "${filePath}"`;
+    const data: Q4Data[] = await queryDatabase(query)
     const priceMap = new Map<string, number>();
 
     data.forEach(purchase => {
@@ -168,7 +159,6 @@ const getHighestTicketsName = async (req, res) => {
     })
 
     console.log('highestName, highestAmount :>> ', highestName, highestAmount);
-
     res.status(200).json(highestName)
 
   } catch (error) {
