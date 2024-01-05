@@ -12,7 +12,7 @@ const con = db.connect();
 
 const getAll = (req, res) => {
   try {
-    con.all(`SELECT * FROM '${filePath}' WHERE "Last Name" = 'Mccarthy'`, function (err, response) {
+    con.all(`SELECT * FROM '${filePath}' `, function (err, response) {
       if (err) {
         console.log("error from readParquetFile", err)
         throw err;
@@ -150,7 +150,46 @@ const getHighestTotalName = async (req, res) => {
 // DESC: QUESTION #4 - First Name that purchased the highest number of total tickets
 // Route: GET /api/parquet/highest/ticketsName
 const getHighestTicketsName = async (req, res) => {
+  try {
+    const data: Q3Names[] = await new Promise((resolve, reject) => {
+      con.all(`SELECT "First Name", "Last Name" FROM "${filePath}"`, function (err, data: Q3Names[]) {
+        if (err) {
+          console.log("error from highest total name", err);
+          reject(err);
+        }
+        resolve(data)
+      })
+    })
 
+    const priceMap = new Map<string, number>();
+
+    data.forEach(purchase => {
+      const nameKey = `${purchase["First Name"]} ${purchase["Last Name"]}`;
+      if (priceMap.has(nameKey)) {
+        priceMap.set(nameKey, priceMap.get(nameKey) + 1)
+      } else {
+        priceMap.set(nameKey, 1);
+      }
+    })
+
+    let highestName = "";
+    let highestAmount = 0;
+
+    priceMap.forEach((total, name) => {
+      if (total > highestAmount) {
+        highestAmount = total;
+        highestName = name.split(" ")[0];
+      }
+    })
+
+    console.log('highestName, highestAmount :>> ', highestName, highestAmount);
+
+    res.status(200).json(highestName)
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: "Failed to get name of highest $ purchase", error })
+  }
 };
 
 // DESC: QUESTION #5 - Total purchase price for each ticket type for each game.
