@@ -69,6 +69,7 @@ const getTotalTicketsPerType = async (req, res) => {
 
     for (const eventName of eventNames) {
       const eventObj: Q2[] = []
+      //assign data to result using an IIFE
       result[eventName] = await (async () => {
         for (const ticketType of ticketTypes) {
           const query = `SELECT * FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`
@@ -98,16 +99,8 @@ const getTotalTicketsPerType = async (req, res) => {
 // Route: GET /api/parquet/highest/totalName
 const getHighestTotalName = async (req, res) => {
   try {
-    const data: Q3Names[] = await new Promise((resolve, reject) => {
-      con.all(`SELECT "First Name", "Last Name", "Price" FROM "${filePath}"`, function (err, data: Q3Names[]) {
-        if (err) {
-          console.log("error from highest total name", err);
-          reject(err);
-        }
-        resolve(data)
-      })
-    })
-
+    const query = `SELECT "First Name", "Last Name", "Price" FROM "${filePath}"`
+    const data: Q3Names[] = await queryDatabase(query)
     const priceMap = new Map<string, number>();
 
     data.forEach(purchase => {
