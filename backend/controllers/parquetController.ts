@@ -1,12 +1,18 @@
 // import readParquetFile from "./readParquetController.js";
 import db from '../config/duckdb.js';
+import { ParquetObj, Q1, Q2 } from '../models/parquetModels.js';
+
 const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
+const event1 = "Wolves vs Knights";
+const event2 = "Wolves vs SunRays";
+
+const eventNames = ['Wolves vs Knights', 'Wolves vs SunRays']
 
 const con = db.connect();
 
 const getAll = (req, res) => {
   try {
-    con.all(`SELECT * FROM '${filePath}' ORDER BY "Event Name"`, function (err, response) {
+    con.all(`SELECT * FROM '${filePath}' WHERE "Ticket Type" = 'Individual' ORDER BY "Event Name"`, function (err, response) {
       if (err) {
         console.log("error from readParquetFile", err)
         throw err;
@@ -25,8 +31,8 @@ const getAll = (req, res) => {
 const getTotalPricePerEvent = async (req, res) => {
   const date = req.params.date
   try {
-    const sum1 = await new Promise((resolve, reject) => {
-      con.all(`SELECT SUM(Price) AS totalPrice1 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = 'Wolves vs Knights';`, function (err, res) {
+    const sum1: number = await new Promise((resolve, reject) => {
+      con.all(`SELECT SUM(Price) AS totalPrice1 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = '${event1}';`, function (err, res) {
         if (err) {
           console.log("error from readParquetFile", err)
           reject(err);
@@ -35,8 +41,8 @@ const getTotalPricePerEvent = async (req, res) => {
       })
     })
 
-    const sum2 = await new Promise((resolve, reject) => {
-      con.all(`SELECT SUM(Price) AS totalPrice2 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = 'Wolves vs SunRays';`, function (err, res) {
+    const sum2: number = await new Promise((resolve, reject) => {
+      con.all(`SELECT SUM(Price) AS totalPrice2 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = '${event2}';`, function (err, res) {
         if (err) {
           console.log("error from readParquetFile", err)
           reject(err);
@@ -44,8 +50,9 @@ const getTotalPricePerEvent = async (req, res) => {
         resolve(res[0].totalPrice2)
       })
     })
+    const result: Q1 = { event1Sum: sum1, event2Sum: sum2 }
 
-    res.status(200).json({ event1Sum: sum1, event2Sum: sum2, })
+    res.status(200).json(result)
 
   } catch (error) {
     console.log('error :>> ', error);
@@ -56,19 +63,42 @@ const getTotalPricePerEvent = async (req, res) => {
 
 // DESC: QUESTION #2 - The Number of tickets purchased for each ticket type for each of the games respectively
 // Route: GET /api/parquet/total/tickets
-const getTotalTicketsPerType = (req, res) => {
+const getTotalTicketsPerType = async (req, res) => {
   try {
-    db.all(`SELECT * FROM '${filePath}' ORDER BY Price DESC LIMIT 5`, function (err, response) {
-      if (err) {
-        console.log("error from readParquetFile", err)
-        throw err;
-      }
-      console.log('res', response)
-      res.status(200).json({ parquetContents: response })
-    })
+    let result = {};
+
+    const ticketTypes = ['Package', 'Individual', 'Full Season'];
+    for (const eventName of eventNames) {
+      const eventObj: Q2[] = []
+      result[eventName] = await (async () => {
+        for (const ticketType of ticketTypes) {
+          const response: ParquetObj[] = await new Promise((resolve, reject) => {
+            con.all(`SELECT * FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`, function (err, data: ParquetObj[]) {
+              if (err) {
+                console.log("error from Q2", err)
+                reject(err)
+              }
+              resolve(data)
+            })
+          })
+          eventObj.push({
+            type: ticketType,
+            event: eventName,
+            total: response.length
+          });
+        }
+        return eventObj;
+      })();
+    }
+
+    console.log('result :>> ', result);
+    res.status(200).json(result)
+
+
+
   } catch (error) {
     console.log('error :>> ', error);
-    res.status(500).json({ message: "Failed to read parquet file" })
+    res.status(500).json({ message: "Failed to read parquet file", error })
   }
 };
 
