@@ -2,11 +2,12 @@
 import db from '../config/duckdb.js';
 import { ParquetObj, Q1, Q1Data, Q2, Q3Names, Q4Data, Q5, Q5Data } from '../models/parquetModels.js';
 
-const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
+const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/config/stellaralgo_dataset.parquet'
 const event1 = "Wolves vs Knights";
 const event2 = "Wolves vs SunRays";
 
-const eventNames = ['Wolves vs Knights', 'Wolves vs SunRays']
+const eventNames = ['Wolves vs Knights', 'Wolves vs SunRays'];
+const ticketTypes = ['Package', 'Individual', 'Full Season'];
 
 const con = db.connect();
 
@@ -65,8 +66,6 @@ const getTotalPricePerEvent = async (req, res) => {
 const getTotalTicketsPerType = async (req, res) => {
   try {
     let result = {};
-    const ticketTypes = ['Package', 'Individual', 'Full Season'];
-
     for (const eventName of eventNames) {
       const eventObj: Q2[] = []
       //assign data to result using an IIFE
@@ -168,10 +167,10 @@ const getTotalPurchasePerGame = async (req, res) => {
   try {
     let result = {};
 
-    const ticketTypes = ['Package', 'Individual', 'Full Season'];
     for (const eventName of eventNames) {
       const eventObj: Q5[] = []
-      result[eventName] = await (async () => {
+      //instead of using an IIFE, as in Q2, we will use a function and call it after
+      const resultPurchaseName = async () => {
         for (const ticketType of ticketTypes) {
           const query = `SELECT SUM(Price) AS sum  FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`
           const response = await queryDatabase<Q5Data>(query)
@@ -183,7 +182,8 @@ const getTotalPurchasePerGame = async (req, res) => {
           });
         }
         return eventObj;
-      })();
+      }
+      result[eventName] = await resultPurchaseName()
     }
     res.status(200).json(result)
 
