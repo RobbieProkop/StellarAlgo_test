@@ -1,6 +1,6 @@
 // import readParquetFile from "./readParquetController.js";
 import db from '../config/duckdb.js';
-import { ParquetObj, Q1, Q2, Q3Names, Q4Data, Q5, Q5Data } from '../models/parquetModels.js';
+import { ParquetObj, Q1, Q1Data, Q2, Q3Names, Q4Data, Q5, Q5Data } from '../models/parquetModels.js';
 
 const filePath = '/Users/iuliiaprokop/Documents/Job Applications/interviews/stellar algo/test_assessment/backend/controllers/stellaralgo_dataset.parquet'
 const event1 = "Wolves vs Knights";
@@ -10,16 +10,29 @@ const eventNames = ['Wolves vs Knights', 'Wolves vs SunRays']
 
 const con = db.connect();
 
-const getAll = (req, res) => {
-  try {
-    con.all(`SELECT * FROM '${filePath}' `, function (err, response) {
+// generic queryDatabase helper function
+const queryDatabase = async <T>(query: string): Promise<T[]> => {
+  return new Promise((resolve, reject) => {
+    con.all(query, function (err, data: T[]) {
       if (err) {
-        console.log("error from readParquetFile", err)
-        throw err;
+        console.log("Error ==> ", err);
+        reject(err)
+      } else {
+        resolve(data)
       }
-      console.log('res', response)
-      res.status(200).json({ parquetContents: response })
     })
+  })
+}
+
+// DESC: Get all data from the parquet file
+// Route: /api/parquet/getAll
+const getAll = async (req, res) => {
+  try {
+    const query = `SELECT * FROM '${filePath}' `
+    const response = await queryDatabase<ParquetObj[]>(query)
+    if (response) {
+      res.status(200).json({ parquetContents: response })
+    }
   } catch (error) {
     console.log('error :>> ', error);
     res.status(500).json({ message: "Failed to read parquet file" })
@@ -31,27 +44,13 @@ const getAll = (req, res) => {
 const getTotalPricePerEvent = async (req, res) => {
   const date = req.params.date
   try {
-    const sum1: number = await new Promise((resolve, reject) => {
-      con.all(`SELECT SUM(Price) AS totalPrice1 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = '${event1}';`, function (err, res) {
-        if (err) {
-          console.log("error from readParquetFile", err)
-          reject(err);
-        }
-        resolve(res[0].totalPrice1)
-      })
-    })
+    const query = `SELECT SUM(Price) AS totalPrice FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = '${event1}'`;
+    const query2 = `SELECT SUM(Price) AS totalPrice FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = '${event2}'`;
 
-    const sum2: number = await new Promise((resolve, reject) => {
-      con.all(`SELECT SUM(Price) AS totalPrice2 FROM "${filePath}" WHERE "Purchase Date" = '${date}' AND "Event Name" = '${event2}';`, function (err, res) {
-        if (err) {
-          console.log("error from readParquetFile", err)
-          reject(err);
-        }
-        resolve(res[0].totalPrice2)
-      })
-    })
-    const result: Q1 = { event1Sum: sum1, event2Sum: sum2 }
+    const sum1 = await queryDatabase<Q1Data>(query)
+    const sum2 = await queryDatabase<Q1Data>(query2)
 
+    const result: Q1 = { event1Sum: sum1[0].totalPrice, event2Sum: sum2[0].totalPrice }
     res.status(200).json(result)
 
   } catch (error) {
@@ -66,21 +65,14 @@ const getTotalPricePerEvent = async (req, res) => {
 const getTotalTicketsPerType = async (req, res) => {
   try {
     let result = {};
-
     const ticketTypes = ['Package', 'Individual', 'Full Season'];
+
     for (const eventName of eventNames) {
       const eventObj: Q2[] = []
       result[eventName] = await (async () => {
         for (const ticketType of ticketTypes) {
-          const response: ParquetObj[] = await new Promise((resolve, reject) => {
-            con.all(`SELECT * FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`, function (err, data: ParquetObj[]) {
-              if (err) {
-                console.log("error from Q2", err)
-                reject(err)
-              }
-              resolve(data)
-            })
-          })
+          const query = `SELECT * FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`
+          const response: ParquetObj[] = await queryDatabase(query)
           eventObj.push({
             type: ticketType,
             event: eventName,

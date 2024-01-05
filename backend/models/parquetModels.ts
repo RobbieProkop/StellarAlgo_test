@@ -8,12 +8,16 @@ export interface ParquetObj {
   "Row Name": number,
   "Seat Number": number,
   "Price": number,
-  "Ticket Type": string
+  "Ticket Type": string,
+  totalNumTickets: number
 }
 
+export interface Q1Data {
+  totalPrice: number
+}
 export interface Q1 {
-  event1Sum: number,
-  event2Sum: number
+  event1Sum: number | null,
+  event2Sum: number | null
 }
 
 export interface Q2 {
