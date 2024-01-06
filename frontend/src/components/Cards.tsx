@@ -6,10 +6,21 @@ import axios from "axios";
 const Cards: FC = () => {
   const [answer, setAnswer] = useState<string[]>([]);
   const [visible, setVisible] = useState<boolean[]>([]);
+  const [input, setInput] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
 
   const toggleAnswer = async (id: number, href: string) => {
-    console.log("id", id);
-    const temp = await axios.get(href);
+    if (id === 1 && !input) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    const temp =
+      id === 1 ? await axios.get(`${href}/${input}`) : await axios.get(href);
     if (visible[id]) {
       setVisible((prev) => {
         const newVisible = [...prev];
@@ -71,21 +82,42 @@ const Cards: FC = () => {
   return (
     <section className="link-card-grid" id="questions">
       {questions.map((question) => (
-        <li
-          key={question.id}
-          className="link-card"
-          onClick={() => toggleAnswer(question.id, question.href)}
-        >
+        <li key={question.id} className="link-card">
           <div>
             <h2>
               {question.title}
               <span>&rarr;</span>
             </h2>
             <p>{question.body}</p>
-            <p className="click">*Click To Reveal Answer*</p>
+            {question.id === 1 && (
+              <>
+                <input
+                  value={input}
+                  onChange={handleChange}
+                  type="text"
+                  className={error ? "input error" : "box input"}
+                  placeholder="Enter Date (01-Jan-23)"
+                />
+
+                {error && <p className="errorText ">Please Enter a Date</p>}
+              </>
+            )}
+            {/* <p className="click">*Click To Reveal Answer*</p> */}
+            <button
+              className="btn"
+              onClick={() => toggleAnswer(question.id, question.href)}
+            >
+              Reveal Answer
+            </button>
 
             {visible[question.id] ? (
-              <p className="box">{answer}</p>
+              <>
+                {question.id === 2 || question.id === 5 ? (
+                  <p className="box">{answer[question.id]}</p>
+                ) : (
+                  <p className="box">{answer[question.id]}</p>
+                )}
+              </>
             ) : (
               <p className="box blur">Blurred Answer</p>
             )}

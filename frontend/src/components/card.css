@@ -11,6 +11,7 @@
   margin: auto;
   padding: 1px;
   max-width: 550px;
+  height: 100%;
   background-color: #23262d;
   background-image: none;
   background-size: 400%;
@@ -42,12 +43,7 @@ p {
   margin-bottom: 0;
 }
 
-.click {
-  font-size: 1rem;
-  color: rgb(var(--bright-teal));
-}
-
-/* .btn {
+.btn {
   cursor: pointer;
   max-width: 180px;
   color: #000;
@@ -62,7 +58,12 @@ p {
 }
 .btn:hover {
   background-color: rgb(var(--pink));
-} */
+}
+
+.click {
+  font-size: 1rem;
+  color: rgb(var(--bright-teal));
+}
 
 .box {
   background-color: rgb(255 255 255 / 30%);
@@ -77,8 +78,27 @@ p {
 .link-card:is(:hover, :focus-within) {
   background-position: 0;
   background-image: var(--accent-gradient);
-  cursor: pointer;
 }
+
 .link-card:is(:hover, :focus-within) h2 {
   color: rgb(var(--accent-light));
+}
+
+.input {
+  margin-top: 0.8rem;
+  background-color: rgb(255 255 255);
+  padding: 1rem;
+  border: none;
+  border-radius: 5px;
+}
+
+.input.error,
+.input.error:active {
+  border: 2px solid red;
+  outline: none;
+}
+
+.errorText {
+  color: red;
+  font-style: italic;
 }
