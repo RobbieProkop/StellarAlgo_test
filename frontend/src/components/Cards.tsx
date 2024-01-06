@@ -106,7 +106,7 @@ const Cards: FC = () => {
               className="btn"
               onClick={() => toggleAnswer(question.id, question.href)}
             >
-              Reveal Answer
+              {visible[question.id] ? "Hide Answer" : "Reveal Answer"}
             </button>
 
             {visible[question.id] ? (
@@ -123,11 +123,58 @@ const Cards: FC = () => {
                     </p>
                   </>
                 )}
-                {/* {question.id === 2 || question.id === 5 ? (
-                  <p className="box">{answer[question.id]}</p>
+                {question.id === 2 ? (
+                  <>
+                    <p className="box">Wolves vs Knights</p>
+                    <p>
+                      {answer[question.id]["Wolves vs Knights"][1].type} Total:{" "}
+                      {
+                        answer[question.id]["Wolves vs Knights"][1]
+                          .totalNumTickets
+                      }
+                    </p>
+                    <p>
+                      {answer[question.id]["Wolves vs Knights"][0].type} Total:{" "}
+                      {
+                        answer[question.id]["Wolves vs Knights"][0]
+                          .totalNumTickets
+                      }
+                    </p>
+
+                    <p>
+                      {answer[question.id]["Wolves vs Knights"][2].type} Total:{" "}
+                      {
+                        answer[question.id]["Wolves vs Knights"][2]
+                          .totalNumTickets
+                      }
+                    </p>
+                    <p className="box">Wolves vs SunRays</p>
+                    <p>
+                      {answer[question.id]["Wolves vs SunRays"][1].type} Total:{" "}
+                      {
+                        answer[question.id]["Wolves vs SunRays"][1]
+                          .totalNumTickets
+                      }
+                    </p>
+                    <p>
+                      {answer[question.id]["Wolves vs SunRays"][0].type} Total:{" "}
+                      {
+                        answer[question.id]["Wolves vs SunRays"][0]
+                          .totalNumTickets
+                      }
+                    </p>
+
+                    <p>
+                      {answer[question.id]["Wolves vs SunRays"][2].type} Total:{" "}
+                      {
+                        answer[question.id]["Wolves vs SunRays"][2]
+                          .totalNumTickets
+                      }
+                    </p>
+                  </>
                 ) : (
                   <p className="box">{answer[question.id]}</p>
-                )} */}
+                )}
               </>
             ) : (
               <p className="box blur">Blurred Answer</p>
