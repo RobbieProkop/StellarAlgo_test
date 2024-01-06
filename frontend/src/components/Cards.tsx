@@ -19,6 +19,7 @@ const Cards: FC = () => {
     //   5000
     // );
   };
+
   // const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 
   //   console.log("display", displayAnswer)

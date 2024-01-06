@@ -59,9 +59,6 @@ p {
 .btn:hover {
   opacity: 0.6;
 }
-.btn:active {
-  pointer-events: none;
-}
 
 .box {
   background-color: rgb(255 255 255 / 30%);
@@ -70,7 +67,7 @@ p {
   margin-top: 0.8rem;
 }
 .blur {
-  filter: blur(10px); 
+  filter: blur(10px);
 }
 
 .link-card:is(:hover, :focus-within) {
