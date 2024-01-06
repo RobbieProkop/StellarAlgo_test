@@ -56,7 +56,7 @@ const Cards: FC = () => {
       id: 2,
       href: "/api/parquet/total/tickets",
       title: "Question 2",
-      body: "The Number of tickets purchased for each ticket type for each of the games respectively",
+      body: "The number of tickets purchased for each ticket type for each of the games respectively",
     },
     {
       id: 3,
@@ -68,7 +68,7 @@ const Cards: FC = () => {
       id: 4,
       href: "/api/parquet/highest/totalName",
       title: "Question 4",
-      body: "First Name that purchased the highest number of total tickets",
+      body: "First name that purchased the highest number of total tickets",
     },
     {
       id: 5,
@@ -111,7 +111,7 @@ const Cards: FC = () => {
 
             {visible[question.id] ? (
               <>
-                {question.id === 1 && (
+                {question.id === 1 ? (
                   <>
                     <p>
                       Wolves vs Knights Sum: $
@@ -122,55 +122,24 @@ const Cards: FC = () => {
                       {answer[question.id].event2Sum || 0}
                     </p>
                   </>
-                )}
-                {question.id === 2 ? (
+                ) : question.id === 2 || question.id === 5 ? (
                   <>
                     <p className="box">Wolves vs Knights</p>
-                    <p>
-                      {answer[question.id]["Wolves vs Knights"][1].type} Total:{" "}
-                      {
-                        answer[question.id]["Wolves vs Knights"][1]
-                          .totalNumTickets
-                      }
-                    </p>
-                    <p>
-                      {answer[question.id]["Wolves vs Knights"][0].type} Total:{" "}
-                      {
-                        answer[question.id]["Wolves vs Knights"][0]
-                          .totalNumTickets
-                      }
-                    </p>
-
-                    <p>
-                      {answer[question.id]["Wolves vs Knights"][2].type} Total:{" "}
-                      {
-                        answer[question.id]["Wolves vs Knights"][2]
-                          .totalNumTickets
-                      }
-                    </p>
+                    {answer[question.id]["Wolves vs Knights"].map(
+                      (event, index) => (
+                        <p key={`knight-${index}`}>
+                          {event.type} Total: {event.total}
+                        </p>
+                      )
+                    )}
                     <p className="box">Wolves vs SunRays</p>
-                    <p>
-                      {answer[question.id]["Wolves vs SunRays"][1].type} Total:{" "}
-                      {
-                        answer[question.id]["Wolves vs SunRays"][1]
-                          .totalNumTickets
-                      }
-                    </p>
-                    <p>
-                      {answer[question.id]["Wolves vs SunRays"][0].type} Total:{" "}
-                      {
-                        answer[question.id]["Wolves vs SunRays"][0]
-                          .totalNumTickets
-                      }
-                    </p>
-
-                    <p>
-                      {answer[question.id]["Wolves vs SunRays"][2].type} Total:{" "}
-                      {
-                        answer[question.id]["Wolves vs SunRays"][2]
-                          .totalNumTickets
-                      }
-                    </p>
+                    {answer[question.id]["Wolves vs Knights"].map(
+                      (event, index) => (
+                        <p key={`knight-${index}`}>
+                          {event.type} Total: {event.total}
+                        </p>
+                      )
+                    )}
                   </>
                 ) : (
                   <p className="box">{answer[question.id]}</p>

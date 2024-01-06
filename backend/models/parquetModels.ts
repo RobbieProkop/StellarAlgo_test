@@ -23,7 +23,7 @@ export interface Q1 {
 export interface Q2 {
   type: string;
   event: string;
-  totalNumTickets: number;
+  total: number;
 }
 
 export interface Q3Names {
@@ -47,5 +47,5 @@ export interface Q5Data {
 export interface Q5 {
   type: string;
   event: string;
-  totalPurchasePrice: number;
+  total: number;
 }

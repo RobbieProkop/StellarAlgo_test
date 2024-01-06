@@ -76,7 +76,7 @@ const getTotalTicketsPerType = async (req, res) => {
           eventObj.push({
             type: ticketType,
             event: eventName,
-            totalNumTickets: response.length
+            total: response.length
           });
         }
         return eventObj;
@@ -178,7 +178,7 @@ const getTotalPurchasePerGame = async (req, res) => {
           eventObj.push({
             type: ticketType,
             event: eventName,
-            totalPurchasePrice: response[0].sum
+            total: response[0].sum
           });
         }
         return eventObj;
