@@ -55,6 +55,16 @@ p {
   pointer-events: none;
 }
 
+.box {
+  background-color: rgb(255 255 255 / 30%);
+  border-radius: 5px;
+  padding: 0.6rem 1rem;
+  margin-top: 0.8rem;
+}
+.blur {
+  filter: blur(10px); 
+}
+
 .link-card:is(:hover, :focus-within) {
   background-position: 0;
   background-image: var(--accent-gradient);

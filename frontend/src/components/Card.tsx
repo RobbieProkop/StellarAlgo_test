@@ -12,7 +12,7 @@ const Card: FC<{
 }> = ({title, q1, body, href}) => {
 
   const [displayAnswer, setDisplayAnswer] = useState<boolean>(false)
-  const [answer, setAnswer] = useState<string>("")
+  const [answer, setAnswer] = useState<string>("Blurred Answer")
   
 
   
@@ -36,7 +36,9 @@ const Card: FC<{
         {body}
       </p>
       <button onClick={onClick} className="btn">Reveal Answer</button>
-      <p>{answer}</p>
+      
+        <p className={displayAnswer ? "box" : " box blur"}>{answer}</p>
+      
     </div>
   </li>
 
