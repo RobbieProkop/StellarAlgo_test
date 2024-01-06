@@ -71,19 +71,18 @@ const Cards: FC = () => {
   return (
     <section className="link-card-grid" id="questions">
       {questions.map((question) => (
-        <li key={question.id} className="link-card">
+        <li
+          key={question.id}
+          className="link-card"
+          onClick={() => toggleAnswer(question.id, question.href)}
+        >
           <div>
             <h2>
               {question.title}
               <span>&rarr;</span>
             </h2>
             <p>{question.body}</p>
-            <button
-              onClick={() => toggleAnswer(question.id, question.href)}
-              className="btn"
-            >
-              Reveal Answer
-            </button>
+            <p className="click">*Click To Reveal Answer*</p>
 
             {visible[question.id] ? (
               <p className="box">{answer}</p>
