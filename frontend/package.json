@@ -15,9 +15,10 @@
     "@types/react": "^18.0.31",
     "@types/react-dom": "^18.0.11",
     "astro": "^4.1.0",
-    "typescript": "^5.3.3",
+    "axios": "^1.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "^4.4.5",
+    "typescript": "^5.3.3"
   }
 }
