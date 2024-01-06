@@ -10,10 +10,19 @@ const Cards: FC = () => {
   const toggleAnswer = async (id: number, href: string) => {
     console.log("id", id);
     const temp = await axios.get(href);
+    if (visible[id]) {
+      setVisible((prev) => {
+        const newVisible = [...prev];
+        newVisible[id] = !newVisible[id];
+        return newVisible;
+      });
+      return;
+    }
 
     console.log("temp :>> ", temp.data);
     setAnswer((prev) => {
       const newAnswer = [...prev];
+      console.log("newAnswer[id] :>> ", newAnswer[id]);
       newAnswer[id] = temp.data;
       return newAnswer;
     });
@@ -24,15 +33,6 @@ const Cards: FC = () => {
       return newVisible;
     });
   };
-
-  // const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-
-  //   console.log("display", displayAnswer)
-  //   setDisplayAnswer(true)
-  //   setAnswer("Hi there")
-  // // answer = await axios.get(`http://localhost:8080/api/${href}`)
-  //   console.log("answer", answer)
-  // }
 
   const questions = [
     {
@@ -50,7 +50,7 @@ const Cards: FC = () => {
     },
     {
       id: 3,
-      href: "/api/parquet/total/purchase",
+      href: "/api/parquet/highest/ticketsName",
       title: "Question 3",
       body: "First Name that purchased the highest total dollar amount of tickets",
     },
@@ -62,7 +62,7 @@ const Cards: FC = () => {
     },
     {
       id: 5,
-      href: "/api/parquet/highest/ticketsName",
+      href: "/api/parquet/total/purchase",
       title: "Question 5",
       body: "Total purchase price for each ticket type for each game",
     },
@@ -85,11 +85,11 @@ const Cards: FC = () => {
               Reveal Answer
             </button>
 
-            <div className={visible[question.id] ? "box" : " box blur"}>
-              {answer.map((game) => {
-                return game[1];
-              })}
-            </div>
+            {visible[question.id] ? (
+              <p className="box">{answer}</p>
+            ) : (
+              <p className="box blur">Blurred Answer</p>
+            )}
           </div>
         </li>
       ))}
