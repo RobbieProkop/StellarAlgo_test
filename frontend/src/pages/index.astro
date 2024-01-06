@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card.tsx";
+import Cards from "../components/Cards.tsx";
 ---
 
 <Layout title="StellarAlgo Test Assessment">
@@ -9,7 +9,9 @@ import Card from "../components/Card.tsx";
       <span class="text-gradient">StellarAlgo</span> Test Assessment
     </h1>
 
-    <ul role="list" class="link-card-grid">
+    <Cards client:load />
+
+    <!-- <ul role="list" class="link-card-grid">
       <Card
         href="parquet/total/price"
         title="Question 1"
@@ -36,7 +38,7 @@ import Card from "../components/Card.tsx";
         title="Question 5"
         body="Total purchase price for each ticket type for each game"
       />
-    </ul>
+    </ul> -->
   </main>
 </Layout>
 
