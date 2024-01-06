@@ -62,7 +62,7 @@ const Cards: FC = () => {
       id: 3,
       href: "/api/parquet/highest/ticketsName",
       title: "Question 3",
-      body: "First Name that purchased the highest total dollar amount of tickets",
+      body: "First name that purchased the highest total dollar amount of tickets",
     },
     {
       id: 4,
