@@ -128,15 +128,19 @@ const Cards: FC = () => {
                     {answer[question.id]["Wolves vs Knights"].map(
                       (event, index) => (
                         <p key={`knight-${index}`}>
-                          {event.type} Total: {event.total}
+                          {question.id === 5
+                            ? `${event.type} Total: ${event.total.toFixed(2)}`
+                            : `${event.type} Total: ${event.total}`}
                         </p>
                       )
                     )}
                     <p className="box">Wolves vs SunRays</p>
-                    {answer[question.id]["Wolves vs Knights"].map(
+                    {answer[question.id]["Wolves vs SunRays"].map(
                       (event, index) => (
-                        <p key={`knight-${index}`}>
-                          {event.type} Total: {event.total}
+                        <p key={`SunRays-${index}`}>
+                          {question.id === 5
+                            ? `${event.type} Total: ${event.total.toFixed(2)}`
+                            : `${event.type} Total: ${event.total}`}
                         </p>
                       )
                     )}

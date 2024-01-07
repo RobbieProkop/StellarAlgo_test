@@ -71,6 +71,7 @@ const getTotalTicketsPerType = async (req, res) => {
       //assign data to result using an IIFE
       result[eventName] = await (async () => {
         for (const ticketType of ticketTypes) {
+
           const query = `SELECT * FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`
           const response: ParquetObj[] = await queryDatabase(query)
           eventObj.push({
