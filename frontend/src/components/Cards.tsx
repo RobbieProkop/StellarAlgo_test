@@ -13,6 +13,14 @@ const Cards: FC = () => {
     setInput(e.target.value);
   };
 
+  const changeVisibility = (id) => {
+    setVisible((prev) => {
+      const newVisible = [...prev];
+      newVisible[id] = !newVisible[id];
+      return newVisible;
+    });
+  };
+
   const toggleAnswer = async (id: number, href: string) => {
     if (id === 1 && !input) {
       setError(true);
@@ -22,12 +30,7 @@ const Cards: FC = () => {
     const temp =
       id === 1 ? await axios.get(`${href}/${input}`) : await axios.get(href);
     if (visible[id]) {
-      setVisible((prev) => {
-        const newVisible = [...prev];
-        newVisible[id] = !newVisible[id];
-        return newVisible;
-      });
-      return;
+      return changeVisibility(id);
     }
 
     setAnswer((prev) => {
@@ -35,12 +38,13 @@ const Cards: FC = () => {
       newAnswer[id] = temp.data;
       return newAnswer;
     });
+    changeVisibility(id);
 
-    setVisible((prev) => {
-      const newVisible = [...prev];
-      newVisible[id] = !newVisible[id];
-      return newVisible;
-    });
+    // setVisible((prev) => {
+    //   const newVisible = [...prev];
+    //   newVisible[id] = !newVisible[id];
+    //   return newVisible;
+    // });
   };
 
   const questions = [
@@ -101,48 +105,105 @@ const Cards: FC = () => {
               </>
             )}
             {/* <p className="click">*Click To Reveal Answer*</p> */}
-            <button
-              className="btn"
-              onClick={() => toggleAnswer(question.id, question.href)}
-            >
-              {visible[question.id] ? "Hide Answer" : "Reveal Answer"}
-            </button>
+            {visible[question.id] ? (
+              <button
+                className="btn"
+                onClick={() => changeVisibility(question.id)}
+              >
+                Hide Answer
+              </button>
+            ) : (
+              <button
+                className="btn"
+                onClick={() => toggleAnswer(question.id, question.href)}
+              >
+                Reveal Answer
+              </button>
+            )}
 
             {visible[question.id] ? (
               <>
+                {/* Uncomment this if connected to Node Express API 
+                       {question.id === 1 ? (
+                        <>
+                          <p>
+                            Wolves vs Knights Sum: $
+                            {answer[question.id].event1Sum || 0}
+                          </p>
+                          <p>
+                            Wolves vs SunRays Sum: $
+                            {answer[question.id].event2Sum || 0}
+                          </p>
+                        </>
+                      ) : question.id === 2 || question.id === 5 ? (
+                        <>
+                          <p className="box">Wolves vs Knights</p>
+                          {answer[question.id]["Wolves vs Knights"].map(
+                            (event, index) => (
+                              <p key={`knight-${index}`}>
+                                {question.id === 5
+                                  ? `${event.type} Total: ${event.total.toFixed(2)}`
+                                  : `${event.type} Total: ${event.total}`}
+                              </p>
+                            )
+                          )}
+                          <p className="box">Wolves vs SunRays</p>
+                          {answer[question.id]["Wolves vs SunRays"].map(
+                            (event, index) => (
+                              <p key={`SunRays-${index}`}>
+                                {question.id === 5
+                                  ? `${event.type} Total: ${event.total.toFixed(2)}`
+                                  : `${event.type} Total: ${event.total}`}
+                              </p>
+                            )
+                            </>
+                          )} */}
                 {question.id === 1 ? (
                   <>
-                    <p>
+                    <p className="box">
                       Wolves vs Knights Sum: $
-                      {answer[question.id].event1Sum || 0}
+                      {answer[question.id][0]
+                        ? answer[question.id][0].total.toFixed(2) || 0
+                        : 0}
                     </p>
-                    <p>
+                    <p className="box">
                       Wolves vs SunRays Sum: $
-                      {answer[question.id].event2Sum || 0}
+                      {answer[question.id][1]
+                        ? answer[question.id][1].total.toFixed(2) || 0
+                        : 0}
                     </p>
                   </>
                 ) : question.id === 2 || question.id === 5 ? (
                   <>
                     <p className="box">Wolves vs Knights</p>
-                    {answer[question.id]["Wolves vs Knights"].map(
-                      (event, index) => (
-                        <p key={`knight-${index}`}>
-                          {question.id === 5
-                            ? `${event.type} Total: ${event.total.toFixed(2)}`
-                            : `${event.type} Total: ${event.total}`}
-                        </p>
-                      )
-                    )}
+                    {console.log("answer[question.id]", answer[question.id])}
+                    {answer[question.id].map((event, index) => {
+                      if (event["Event Name"] === "Wolves vs Knights") {
+                        return (
+                          <p key={`knight-${index}`}>
+                            {question.id === 5
+                              ? `${
+                                  event["Ticket Type"]
+                                } Total: ${event.total.toFixed(2)}`
+                              : `${event["Ticket Type"]} Total: ${event.total}`}
+                          </p>
+                        );
+                      }
+                    })}
                     <p className="box">Wolves vs SunRays</p>
-                    {answer[question.id]["Wolves vs SunRays"].map(
-                      (event, index) => (
-                        <p key={`SunRays-${index}`}>
-                          {question.id === 5
-                            ? `${event.type} Total: ${event.total.toFixed(2)}`
-                            : `${event.type} Total: ${event.total}`}
-                        </p>
-                      )
-                    )}
+                    {answer[question.id].map((event, index) => {
+                      if (event["Event Name"] === "Wolves vs SunRays") {
+                        return (
+                          <p key={`knight-${index}`}>
+                            {question.id === 5
+                              ? `${
+                                  event["Ticket Type"]
+                                } Total: ${event.total.toFixed(2)}`
+                              : `${event["Ticket Type"]} Total: ${event.total}`}
+                          </p>
+                        );
+                      }
+                    })}
                   </>
                 ) : (
                   <p className="box">{answer[question.id]}</p>
