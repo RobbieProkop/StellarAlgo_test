@@ -1,10 +1,19 @@
-from flask import Flask, request, jsonify
+from flask import Flask
+from flask_cors import CORS
+
 import pandas as pd
 app = Flask(__name__)
 
+cors = CORS(app, resources={r"/api/*": {"origins": "http://localhost:4321"}})
 
 df = pd.read_parquet("./stellaralgo_dataset.parquet")
 # print(df)
+
+
+@app.route('/api/heartbeat', methods=['GET'])
+def heartbeat():
+   return {"message": "Server is live"}
+
 
 # DESC: QUESTION #1 -  Get total price of tickets bought on a specific day for each of the 2 events
 @app.route('/api/parquet/total/price/<date>', methods=['GET'])

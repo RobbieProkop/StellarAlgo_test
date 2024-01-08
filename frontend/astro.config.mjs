@@ -7,7 +7,10 @@ export default defineConfig({
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:8080',
+          // Node Express
+          // target: 'http://localhost:8080',
+          //Python Flask
+          target: 'http://localhost:5000',
           changeOrigin: true,
           secure: false,
         }
