@@ -2,6 +2,7 @@ import React, { useEffect, type FC } from "react";
 import "./card.css";
 import { useState } from "react";
 import axios from "axios";
+import type { ParquetObj, Q2 } from "../../dataModels";
 
 const Cards: FC = () => {
   const [answer, setAnswer] = useState<string[]>([]);
@@ -13,7 +14,7 @@ const Cards: FC = () => {
     setInput(e.target.value);
   };
 
-  const changeVisibility = (id) => {
+  const changeVisibility = (id: number) => {
     setVisible((prev) => {
       const newVisible = [...prev];
       newVisible[id] = !newVisible[id];
@@ -177,7 +178,7 @@ const Cards: FC = () => {
                   <>
                     <p className="box">Wolves vs Knights</p>
                     {console.log("answer[question.id]", answer[question.id])}
-                    {answer[question.id].map((event, index) => {
+                    {answer[question.id].map((event: Q2, index: number) => {
                       if (event["Event Name"] === "Wolves vs Knights") {
                         return (
                           <p key={`knight-${index}`}>
@@ -191,7 +192,7 @@ const Cards: FC = () => {
                       }
                     })}
                     <p className="box">Wolves vs SunRays</p>
-                    {answer[question.id].map((event, index) => {
+                    {answer[question.id].map((event: Q2, index: number) => {
                       if (event["Event Name"] === "Wolves vs SunRays") {
                         return (
                           <p key={`knight-${index}`}>
