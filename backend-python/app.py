@@ -31,20 +31,28 @@ def get_total_tickets():
 # DESC: QUESTION #3 - First Name that purchased the highest total $ of tickets
 @app.route('/api/parquet/highest/totalName')
 def get_highest_total():
-  result = df.groupby('First Name')['Price'].sum().reset_index(name='total')
-  result_dict = result.to_dict(orient="records")
+  # result = df.groupby('First Name')['Price'].sum().reset_index(name='total')
+  # result_dict = result.to_dict(orient="records")
 
-  highest = max(result_dict, key=lambda x: x['total']) 
-  return highest['First Name']
+  # highest = max(result_dict, key=lambda x: x['total']) 
+  # return highest['First Name']
+  
+  # solution #2
+  result = df.groupby('First Name')['Price'].sum().idxmax()
+  return result
 
 # DESC: QUESTION #4 - First Name that purchased the highest number of total tickets
 @app.route('/api/parquet/highest/ticketsName')
 def get_highest_tickets_name():
-  result = df.groupby('First Name').size().reset_index(name='total')
-  result_dict = result.to_dict(orient="records")
+  # result = df.groupby('First Name').size().reset_index(name='total')
+  # result_dict = result.to_dict(orient="records")
 
-  highest = max(result_dict, key=lambda x: x['total']) 
-  return highest['First Name']
+  # highest = max(result_dict, key=lambda x: x['total']) 
+  # return highest['First Name']
+  
+  # solution #2
+  result = df['First Name'].value_counts().idxmax()
+  return result
 
 # DESC: QUESTION #5 - Total purchase price for each ticket type for each game.
 @app.route('/api/parquet/total/purchase')
@@ -53,6 +61,5 @@ def get_total_purchase():
 
    return result.to_dict(orient='records')
 
-# print(get_total_per_event('02-Apr-23'))
 if __name__ == '__main__':
     app.run(debug=True)
