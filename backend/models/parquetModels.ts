@@ -40,6 +40,9 @@ export interface Q4Data {
   "First Name": string,
   "Last Name": string,
 }
+export interface Q4Data2 {
+  "First Name": string,
+}
 
 export interface Q5Data {
   sum: number
