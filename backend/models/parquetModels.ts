@@ -21,8 +21,8 @@ export interface Q1 {
 }
 
 export interface Q2 {
-  type: string;
-  event: string;
+  'Ticket Type': string;
+  'Event Name': string;
   total: number;
 }
 
@@ -45,7 +45,7 @@ export interface Q5Data {
   sum: number
 }
 export interface Q5 {
-  type: string;
-  event: string;
+  'Ticket Type': string;
+  'Event Name': string;
   total: number;
 }

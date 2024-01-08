@@ -75,8 +75,8 @@ const getTotalTicketsPerType = async (req, res) => {
           const query = `SELECT * FROM '${filePath}' WHERE "Ticket Type" = '${ticketType}' AND "Event Name" = '${eventName}'`
           const response: ParquetObj[] = await queryDatabase(query)
           eventObj.push({
-            type: ticketType,
-            event: eventName,
+            'Ticket Type': ticketType,
+            'Event Name': eventName,
             total: response.length
           });
         }
@@ -129,6 +129,8 @@ const getHighestTotalName = async (req, res) => {
 
 // DESC: QUESTION #4 - First Name that purchased the highest number of total tickets
 // Route: GET /api/parquet/highest/ticketsName
+// Not sure if this question is looking for the individual who purchased the highest number of tickets and returning the first name, or simply the first name that bought the highest number of tickets (could be multiple Johns for example)
+
 const getHighestTicketsName = async (req, res) => {
   try {
     const query = `SELECT "First Name", "Last Name" FROM "${filePath}"`;
@@ -177,8 +179,8 @@ const getTotalPurchasePerGame = async (req, res) => {
           const response = await queryDatabase<Q5Data>(query)
 
           eventObj.push({
-            type: ticketType,
-            event: eventName,
+            'Ticket Type': ticketType,
+            'Event Name': eventName,
             total: response[0].sum
           });
         }
