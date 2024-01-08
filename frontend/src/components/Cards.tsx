@@ -30,7 +30,6 @@ const Cards: FC = () => {
       return;
     }
 
-    console.log("temp :>> ", temp.data);
     setAnswer((prev) => {
       const newAnswer = [...prev];
       newAnswer[id] = temp.data;

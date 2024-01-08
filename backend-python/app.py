@@ -20,7 +20,13 @@ def get_total_tickets():
    return result.to_dict(orient='records')
 
 # Question 3
-# @app.route('/api/parquet/highest/totalName')
+@app.route('/api/parquet/highest/totalName')
+def get_highest_total():
+  result = df.groupby('First Name').size().reset_index(name='total')
+  result_dict = result.to_dict(orient="records")
+
+  highest = max(result_dict, key=lambda x: x['total']) 
+  return highest["First Name"]
 # def get_highest_total_name():
 # # Question 4
 # @app.route('/api/parquet/highest/ticketsName')
