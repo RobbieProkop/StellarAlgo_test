@@ -63,6 +63,7 @@ const getTotalPricePerEvent = async (req, res) => {
 
 // DESC: QUESTION #2 - The Number of tickets purchased for each ticket type for each of the games respectively
 // Route: GET /api/parquet/total/tickets
+// Time complexity: O(n^2)
 const getTotalTicketsPerType = async (req, res) => {
   try {
     let result = {};
@@ -94,6 +95,7 @@ const getTotalTicketsPerType = async (req, res) => {
 
 // DESC: QUESTION #3 - First Name that purchased the highest total $ of tickets
 // Route: GET /api/parquet/highest/totalName
+// Time Complexity: O(n)
 // Not sure if this question is looking for the individual who purchased the highest dollar amount and returning the first name, or simply the first name that paid the highest dollar amount (could be multiple Johns for example)
 const getHighestTotalName = async (req, res) => {
   try {
