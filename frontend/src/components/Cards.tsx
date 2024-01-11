@@ -108,24 +108,12 @@ const Cards: FC = () => {
                 Hide Answer
               </button>
             ) : (
-              <>
-                <button
-                  className="btn"
-                  onClick={() => toggleAnswer(question.id, question.href)}
-                >
-                  Reveal Answer
-                </button>
-                {question.href2 && (
-                  <button
-                    className="btn btn-pink"
-                    onClick={() =>
-                      toggleAnswer(question.id, question.href2 as string)
-                    }
-                  >
-                    Reveal Individual
-                  </button>
-                )}
-              </>
+              <button
+                className="btn"
+                onClick={() => toggleAnswer(question.id, question.href)}
+              >
+                Reveal Answer
+              </button>
             )}
 
             {visible[question.id] ? (
