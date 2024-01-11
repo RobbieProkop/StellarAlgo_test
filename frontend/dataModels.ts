@@ -12,6 +12,14 @@ export interface ParquetObj {
   totalNumTickets: number
 }
 
+export interface Question {
+  id: number;
+  href: string;
+  href2?: string;
+  title: string;
+  body: string;
+}
+
 export interface Q1Data {
   totalPrice: number
 }

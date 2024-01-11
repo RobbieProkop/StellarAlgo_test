@@ -2,7 +2,7 @@ import React, { useEffect, type FC } from "react";
 import "./card.css";
 import { useState } from "react";
 import axios from "axios";
-import type { ParquetObj, Q2 } from "../../dataModels";
+import type { ParquetObj, Q2, Question } from "../../dataModels";
 
 const Cards: FC = () => {
   const [answer, setAnswer] = useState<string[]>([]);
@@ -40,21 +40,14 @@ const Cards: FC = () => {
       return newAnswer;
     });
     changeVisibility(id);
-
-    // setVisible((prev) => {
-    //   const newVisible = [...prev];
-    //   newVisible[id] = !newVisible[id];
-    //   return newVisible;
-    // });
   };
 
-  const questions = [
+  const questions: Question[] = [
     {
       id: 1,
       href: "/api/parquet/total/price",
       title: "Question 1",
       body: "Get total price of tickets bought on a specific day for each of the 2 events",
-      q1: true,
     },
     {
       id: 2,
@@ -64,13 +57,15 @@ const Cards: FC = () => {
     },
     {
       id: 3,
-      href: "/api/parquet/highest/ticketsName",
+      href: "/api/parquet/highest/tickets/name",
+      href2: "/api/parquet/highest/tickets/individual",
       title: "Question 3",
       body: "First name that purchased the highest total dollar amount of tickets",
     },
     {
       id: 4,
-      href: "/api/parquet/highest/totalName",
+      href: "/api/parquet/highest/total/name",
+      href2: "/api/parquet/highest/total/individual",
       title: "Question 4",
       body: "First name that purchased the highest number of total tickets",
     },
@@ -105,7 +100,6 @@ const Cards: FC = () => {
                 {error && <p className="errorText ">Please Enter a Date</p>}
               </>
             )}
-            {/* <p className="click">*Click To Reveal Answer*</p> */}
             {visible[question.id] ? (
               <button
                 className="btn"
@@ -114,52 +108,68 @@ const Cards: FC = () => {
                 Hide Answer
               </button>
             ) : (
-              <button
-                className="btn"
-                onClick={() => toggleAnswer(question.id, question.href)}
-              >
-                Reveal Answer
-              </button>
+              <>
+                <button
+                  className="btn"
+                  onClick={() => toggleAnswer(question.id, question.href)}
+                >
+                  Reveal Answer
+                </button>
+                {question.href2 && (
+                  <button
+                    className="btn btn-pink"
+                    onClick={() =>
+                      toggleAnswer(question.id, question.href2 as string)
+                    }
+                  >
+                    Reveal Individual
+                  </button>
+                )}
+              </>
             )}
 
             {visible[question.id] ? (
               <>
-                {/* Uncomment this if connected to Node Express API 
-                      //  {question.id === 1 ? (
-                      //   <>
-                      //     <p>
-                      //       Wolves vs Knights Sum: $
-                      //       {answer[question.id].event1Sum || 0}
-                      //     </p>
-                      //     <p>
-                      //       Wolves vs SunRays Sum: $
-                      //       {answer[question.id].event2Sum || 0}
-                      //     </p>
-                      //   </>
-                      // ) : question.id === 2 || question.id === 5 ? (
-                      //   <>
-                      //     <p className="box">Wolves vs Knights</p>
-                      //     {answer[question.id]["Wolves vs Knights"].map(
-                      //       (event, index) => (
-                      //         <p key={`knight-${index}`}>
-                      //           {question.id === 5
-                      //             ? `${event.type} Total: ${event.total.toFixed(2)}`
-                      //             : `${event.type} Total: ${event.total}`}
-                      //         </p>
-                      //       )
-                      //     )}
-                      //     <p className="box">Wolves vs SunRays</p>
-                      //     {answer[question.id]["Wolves vs SunRays"].map(
-                      //       (event, index) => (
-                      //         <p key={`SunRays-${index}`}>
-                      //           {question.id === 5
-                      //             ? `${event.type} Total: ${event.total.toFixed(2)}`
-                      //             : `${event.type} Total: ${event.total}`}
-                      //         </p>
-                      //       )
-                      //       </>
-                      //     )} */}
                 {question.id === 1 ? (
+                  <>
+                    <p>
+                      Wolves vs Knights Sum: $
+                      {answer[question.id].event1Sum || 0}
+                    </p>
+                    <p>
+                      Wolves vs SunRays Sum: $
+                      {answer[question.id].event2Sum || 0}
+                    </p>
+                  </>
+                ) : question.id === 2 || question.id === 5 ? (
+                  <>
+                    <p className="box">Wolves vs Knights</p>
+                    {answer[question.id]["Wolves vs Knights"].map(
+                      (event: Q2, index: number) => (
+                        <p key={`knight-${index}`}>
+                          {question.id === 5
+                            ? `${
+                                event["Ticket Type"]
+                              } Total: ${event.total.toFixed(2)}`
+                            : `${event["Ticket Type"]} Total: ${event.total}`}
+                        </p>
+                      )
+                    )}
+                    <p className="box">Wolves vs SunRays</p>
+                    {answer[question.id]["Wolves vs SunRays"].map(
+                      (event: Q2, index: number) => (
+                        <p key={`SunRays-${index}`}>
+                          {question.id === 5
+                            ? `${
+                                event["Ticket Type"]
+                              } Total: ${event.total.toFixed(2)}`
+                            : `${event["Ticket Type"]} Total: ${event.total}`}
+                        </p>
+                      )
+                    )}
+
+                    {/* uncomment to connect python api */}
+                    {/* {question.id === 1 ? (
                   <>
                     <p className="box">
                       Wolves vs Knights Sum: $
@@ -205,6 +215,7 @@ const Cards: FC = () => {
                         );
                       }
                     })}
+                  */}
                   </>
                 ) : (
                   <p className="box">{answer[question.id]}</p>
