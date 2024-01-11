@@ -30,14 +30,14 @@ def get_total_tickets():
 
 # DESC: QUESTION #3 - First Name that purchased the highest total $ of tickets
 # Time Complexity: Potentially O(n)
-@app.route('/api/parquet/highest/totalName')
+@app.route('/api/parquet/highest/total/name')
 def get_highest_total():
   result = df.groupby('First Name')['Price'].sum().idxmax()
   return result
 
 # DESC: QUESTION #4 - First Name that purchased the highest number of total tickets
 # Time Complexity: Potentially O(n)
-@app.route('/api/parquet/highest/ticketsName')
+@app.route('/api/parquet/highest/tickets/name')
 def get_highest_tickets_name():
   result = df['First Name'].value_counts().idxmax()
   return result
