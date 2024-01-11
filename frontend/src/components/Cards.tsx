@@ -125,40 +125,40 @@ const Cards: FC = () => {
             {visible[question.id] ? (
               <>
                 {/* Uncomment this if connected to Node Express API 
-                       {question.id === 1 ? (
-                        <>
-                          <p>
-                            Wolves vs Knights Sum: $
-                            {answer[question.id].event1Sum || 0}
-                          </p>
-                          <p>
-                            Wolves vs SunRays Sum: $
-                            {answer[question.id].event2Sum || 0}
-                          </p>
-                        </>
-                      ) : question.id === 2 || question.id === 5 ? (
-                        <>
-                          <p className="box">Wolves vs Knights</p>
-                          {answer[question.id]["Wolves vs Knights"].map(
-                            (event, index) => (
-                              <p key={`knight-${index}`}>
-                                {question.id === 5
-                                  ? `${event.type} Total: ${event.total.toFixed(2)}`
-                                  : `${event.type} Total: ${event.total}`}
-                              </p>
-                            )
-                          )}
-                          <p className="box">Wolves vs SunRays</p>
-                          {answer[question.id]["Wolves vs SunRays"].map(
-                            (event, index) => (
-                              <p key={`SunRays-${index}`}>
-                                {question.id === 5
-                                  ? `${event.type} Total: ${event.total.toFixed(2)}`
-                                  : `${event.type} Total: ${event.total}`}
-                              </p>
-                            )
-                            </>
-                          )} */}
+                      //  {question.id === 1 ? (
+                      //   <>
+                      //     <p>
+                      //       Wolves vs Knights Sum: $
+                      //       {answer[question.id].event1Sum || 0}
+                      //     </p>
+                      //     <p>
+                      //       Wolves vs SunRays Sum: $
+                      //       {answer[question.id].event2Sum || 0}
+                      //     </p>
+                      //   </>
+                      // ) : question.id === 2 || question.id === 5 ? (
+                      //   <>
+                      //     <p className="box">Wolves vs Knights</p>
+                      //     {answer[question.id]["Wolves vs Knights"].map(
+                      //       (event, index) => (
+                      //         <p key={`knight-${index}`}>
+                      //           {question.id === 5
+                      //             ? `${event.type} Total: ${event.total.toFixed(2)}`
+                      //             : `${event.type} Total: ${event.total}`}
+                      //         </p>
+                      //       )
+                      //     )}
+                      //     <p className="box">Wolves vs SunRays</p>
+                      //     {answer[question.id]["Wolves vs SunRays"].map(
+                      //       (event, index) => (
+                      //         <p key={`SunRays-${index}`}>
+                      //           {question.id === 5
+                      //             ? `${event.type} Total: ${event.total.toFixed(2)}`
+                      //             : `${event.type} Total: ${event.total}`}
+                      //         </p>
+                      //       )
+                      //       </>
+                      //     )} */}
                 {question.id === 1 ? (
                   <>
                     <p className="box">
