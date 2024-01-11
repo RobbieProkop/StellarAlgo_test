@@ -8,9 +8,9 @@ export default defineConfig({
       proxy: {
         '/api': {
           // Node Express
-          // target: 'http://localhost:8080',
+          target: 'http://localhost:8080',
           //Python Flask
-          target: 'http://localhost:5000',
+          // target: 'http://localhost:5000',
           changeOrigin: true,
           secure: false,
         }

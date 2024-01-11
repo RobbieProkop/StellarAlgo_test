@@ -5,7 +5,7 @@ import axios from "axios";
 import type { ParquetObj, Q2, Question } from "../../dataModels";
 
 const Cards: FC = () => {
-  const [answer, setAnswer] = useState<string[]>([]);
+  const [answer, setAnswer] = useState<string[] | any>([]);
   const [visible, setVisible] = useState<boolean[]>([]);
   const [input, setInput] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
@@ -34,7 +34,7 @@ const Cards: FC = () => {
       return changeVisibility(id);
     }
 
-    setAnswer((prev) => {
+    setAnswer((prev: string[] | any) => {
       const newAnswer = [...prev];
       newAnswer[id] = temp.data;
       return newAnswer;
@@ -108,7 +108,7 @@ const Cards: FC = () => {
                 Hide Answer
               </button>
             ) : (
-              <>
+              <div className="flex">
                 <button
                   className="btn"
                   onClick={() => toggleAnswer(question.id, question.href)}
@@ -125,7 +125,7 @@ const Cards: FC = () => {
                     Reveal Individual
                   </button>
                 )}
-              </>
+              </div>
             )}
 
             {visible[question.id] ? (
@@ -150,7 +150,7 @@ const Cards: FC = () => {
                           {question.id === 5
                             ? `${
                                 event["Ticket Type"]
-                              } Total: ${event.total.toFixed(2)}`
+                              } Total: $${event.total.toFixed(2)}`
                             : `${event["Ticket Type"]} Total: ${event.total}`}
                         </p>
                       )
@@ -162,60 +162,11 @@ const Cards: FC = () => {
                           {question.id === 5
                             ? `${
                                 event["Ticket Type"]
-                              } Total: ${event.total.toFixed(2)}`
+                              } Total: $${event.total.toFixed(2)}`
                             : `${event["Ticket Type"]} Total: ${event.total}`}
                         </p>
                       )
                     )}
-
-                    {/* uncomment to connect python api */}
-                    {/* {question.id === 1 ? (
-                  <>
-                    <p className="box">
-                      Wolves vs Knights Sum: $
-                      {answer[question.id][0]
-                        ? answer[question.id][0].total.toFixed(2) || 0
-                        : 0}
-                    </p>
-                    <p className="box">
-                      Wolves vs SunRays Sum: $
-                      {answer[question.id][1]
-                        ? answer[question.id][1].total.toFixed(2) || 0
-                        : 0}
-                    </p>
-                  </>
-                ) : question.id === 2 || question.id === 5 ? (
-                  <>
-                    <p className="box">Wolves vs Knights</p>
-                    {console.log("answer[question.id]", answer[question.id])}
-                    {answer[question.id].map((event: Q2, index: number) => {
-                      if (event["Event Name"] === "Wolves vs Knights") {
-                        return (
-                          <p key={`knight-${index}`}>
-                            {question.id === 5
-                              ? `${
-                                  event["Ticket Type"]
-                                } Total: ${event.total.toFixed(2)}`
-                              : `${event["Ticket Type"]} Total: ${event.total}`}
-                          </p>
-                        );
-                      }
-                    })}
-                    <p className="box">Wolves vs SunRays</p>
-                    {answer[question.id].map((event: Q2, index: number) => {
-                      if (event["Event Name"] === "Wolves vs SunRays") {
-                        return (
-                          <p key={`knight-${index}`}>
-                            {question.id === 5
-                              ? `${
-                                  event["Ticket Type"]
-                                } Total: ${event.total.toFixed(2)}`
-                              : `${event["Ticket Type"]} Total: ${event.total}`}
-                          </p>
-                        );
-                      }
-                    })}
-                  */}
                   </>
                 ) : (
                   <p className="box">{answer[question.id]}</p>
