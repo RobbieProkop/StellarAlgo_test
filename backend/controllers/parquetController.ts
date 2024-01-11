@@ -203,7 +203,7 @@ const getHighestTicketsIndividual = async (req, res) => {
 };
 
 // DESC: QUESTION #4-B - First Name that purchased the highest number of total tickets
-// Route: GET /api/parquet/highest/tickets/ame
+// Route: GET /api/parquet/highest/tickets/name
 const getHighestTicketsName = async (req, res) => {
   try {
     const query = `SELECT "First Name" FROM "${filePath}"`;
