@@ -25,7 +25,7 @@ const queryDatabase = async <T>(query: string): Promise<T[]> => {
   })
 }
 
-// DESC: Get all data from the parquet file
+// DESC: Get all data from the parquet file for testing purposes
 // Route: /api/parquet/getAll
 const getAll = async (req, res) => {
   try {
@@ -93,29 +93,47 @@ const getTotalTicketsPerType = async (req, res) => {
   }
 };
 
-// DESC: QUESTION #3 - First Name that purchased the highest total $ of tickets
-// Route: GET /api/parquet/highest/totalName
+// DESC Question #3-A - Individual that purchased the highest total $ of tickets, return first name
+// Rout: GET /api/parquet/highest/total/individual
 // Time Complexity: O(n)
-// Not sure if this question is looking for the individual who purchased the highest dollar amount and returning the first name, or simply the first name that paid the highest dollar amount (could be multiple Johns for example)
+const getHighestTotalIndividual = async (req, res) => {
+  try {
+    const query = `SELECT "First Name", "Last Name", "Price" FROM "${filePath}"`
+    const data: Q3Names[] = await queryDatabase(query)
+    const priceMap = new Map<string, number>();
+
+    data.forEach(purchase => {
+      const nameKey = `${purchase["First Name"]} ${purchase["Last Name"]}`;
+      if (priceMap.has(nameKey)) {
+        priceMap.set(nameKey, priceMap.get(nameKey) + purchase["Price"])
+      } else {
+        priceMap.set(nameKey, purchase["Price"]);
+      }
+    })
+
+    let highestName = "";
+    let highestAmount = 0;
+
+    priceMap.forEach((total, name) => {
+      if (total > highestAmount) {
+        highestAmount = total;
+        highestName = name.split(" ")[0];
+      }
+    })
+
+    res.status(200).json(highestName)
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: "Failed to get name of highest $ purchase", error })
+  }
+};
+
+// DESC: QUESTION #3-B - First Name that purchased the highest total $ of tickets
+// Route: GET /api/parquet/highest/total/name
+// Time Complexity: O(n)
 const getHighestTotalName = async (req, res) => {
   try {
-    // Checks for highest dollar amount from an individual and returning first name
-
-    // const query = `SELECT "First Name", "Last Name", "Price" FROM "${filePath}"`
-    // const data: Q3Names[] = await queryDatabase(query)
-    // const priceMap = new Map<string, number>();
-
-    // data.forEach(purchase => {
-    //   const nameKey = `${purchase["First Name"]} ${purchase["Last Name"]}`;
-    //   if (priceMap.has(nameKey)) {
-    //     priceMap.set(nameKey, priceMap.get(nameKey) + purchase["Price"])
-    //   } else {
-    //     priceMap.set(nameKey, purchase["Price"]);
-    //   }
-    // })
-
-    // Checks for first name that paid highest dolalr amount
-
     const query = `SELECT "First Name", "Price" FROM "${filePath}"`;
     const data = await queryDatabase(query);
     const priceMap = new Map<string, number>();
@@ -147,29 +165,47 @@ const getHighestTotalName = async (req, res) => {
   }
 };
 
-// DESC: QUESTION #4 - First Name that purchased the highest number of total tickets
-// Route: GET /api/parquet/highest/ticketsName
-// Not sure if this question is looking for the individual who purchased the highest number of tickets and returning the first name, or simply the first name that bought the highest number of tickets (could be multiple Johns for example)
 
+
+// DESC: QUESTION #4-A - Individual that purchased the highest number of total tickets, returns first name
+// Route: GET /api/parquet/highest/tickets/individual
+const getHighestTicketsIndividual = async (req, res) => {
+  try {
+    const query = `SELECT "First Name", "Last Name" FROM "${filePath}"`;
+    const data: Q4Data[] = await queryDatabase(query)
+    const priceMap = new Map<string, number>();
+
+    data.forEach(purchase => {
+      const nameKey = `${purchase["First Name"]} ${purchase["Last Name"]}`;
+      if (priceMap.has(nameKey)) {
+        priceMap.set(nameKey, priceMap.get(nameKey) + 1)
+      } else {
+        priceMap.set(nameKey, 1);
+      }
+    })
+
+    let highestName = "";
+    let highestAmount = 0;
+
+    priceMap.forEach((total, name) => {
+      if (total > highestAmount) {
+        highestAmount = total;
+        highestName = name.split(" ")[0];
+      }
+    })
+
+    res.status(200).json(highestName)
+
+  } catch (error) {
+    console.log('error :>> ', error);
+    res.status(500).json({ message: "Failed to get name of highest $ purchase", error })
+  }
+};
+
+// DESC: QUESTION #4-B - First Name that purchased the highest number of total tickets
+// Route: GET /api/parquet/highest/tickets/ame
 const getHighestTicketsName = async (req, res) => {
   try {
-    //Checks for the individual that purchased the most amount of tickets, then returns the first name of that individual
-
-    // const query = `SELECT "First Name", "Last Name" FROM "${filePath}"`;
-    // const data: Q4Data[] = await queryDatabase(query)
-    // const priceMap = new Map<string, number>();
-
-    // data.forEach(purchase => {
-    //   const nameKey = `${purchase["First Name"]} ${purchase["Last Name"]}`;
-    //   if (priceMap.has(nameKey)) {
-    //     priceMap.set(nameKey, priceMap.get(nameKey) + 1)
-    //   } else {
-    //     priceMap.set(nameKey, 1);
-    //   }
-    // })
-
-    // check only the first name that purchased the most amount of tickets (can be multiple people with the same name)
-
     const query = `SELECT "First Name" FROM "${filePath}"`;
     const data: Q4Data2[] = await queryDatabase(query);
     const priceMap = new Map<string, number>();
@@ -237,7 +273,9 @@ export {
   getTotalPricePerEvent,
   getTotalTicketsPerType,
   getHighestTotalName,
+  getHighestTotalIndividual,
   getHighestTicketsName,
+  getHighestTicketsIndividual,
   getTotalPurchasePerGame,
   getAll
 }
