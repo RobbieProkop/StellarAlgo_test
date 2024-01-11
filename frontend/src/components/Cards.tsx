@@ -1,8 +1,8 @@
-import React, { useEffect, type FC } from "react";
+import React, { type FC } from "react";
 import "./card.css";
 import { useState } from "react";
 import axios from "axios";
-import type { ParquetObj, Q2, Question } from "../../dataModels";
+import type { Q2, Question } from "../../dataModels";
 
 const Cards: FC = () => {
   const [answer, setAnswer] = useState<string[] | any>([]);
